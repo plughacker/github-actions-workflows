@@ -6,7 +6,7 @@ on:
         type: string
 
 env:
-  tf_version: 'v1.0.6'
+  tf_version: '1.0.6'
   tg_version: '0.36.7'
   tf_working_dir: ${{ inputs.working_dir }}
 
