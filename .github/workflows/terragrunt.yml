@@ -1,51 +1,66 @@
 on:
   workflow_call:
+    secrets:
+      gh_token:
+        required: true
+
+      git_ssh_key:
+        required: true
+      
+      aws_access_key_id:
+        required: true
+
+      aws_secret_access_key:
+        required: true
+
     inputs:
-      working_dir:
+      git_repository:
+        required: true
+        type: string
+
+      git_repository_owner:
+        required: true
+        type: string
+
+      tg_working_dir:
         required: true
         type: string
 
 env:
   tf_version: '1.0.6'
   tg_version: '0.36.7'
-  tf_working_dir: ${{ inputs.working_dir }}
+  tg_working_dir: ${{ inputs.tg_working_dir }}
+  git_repository: ${{ inputs.git_repository }}
+  git_repository_owner: ${{ inputs.git_repository_owner }}
 
 jobs:
   terragrunt:
     name: 'Terragrunt'
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@master
-
-      - name: 'Terragrunt Init'
-        uses: the-commons-project/terragrunt-github-actions@master
+      - name: Checkout private tools
+        uses: actions/checkout@v3
         with:
-          tf_actions_version: ${{ env.tf_version }}
-          tg_actions_version: ${{ env.tg_version }}
-          tf_actions_subcommand: 'init'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ env.git_repository }}
+          token: ${{ secrets.gh_token }}
+          ref: test/removing-profiles
 
-      - name: 'Terragrunt Validate'
-        uses: the-commons-project/terragrunt-github-actions@master
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          tf_actions_version: ${{ env.tf_version }}
-          tg_actions_version: ${{ env.tg_version }}
-          tf_actions_binary: 'terraform'
-          tf_actions_subcommand: 'validate'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-region: us-east-1
 
-      - name: 'Terragrunt Apply'
-        uses: the-commons-project/terragrunt-github-actions@master
+      - name: Terragrunt init
+        uses: nulldutra/terragrunt-github-action@main
         with:
-          tf_actions_version: ${{ env.tf_version }}
-          tg_actions_version: ${{ env.tg_version }}
-          tf_actions_binary: 'terraform'
-          tf_actions_subcommand: 'apply'
-          tf_actions_working_dir: ${{ env.tf_working_dir }}
+          tf_version: 1.0.6
+          tg_version: 0.36.7
+          tg_command: 'init'
+          tg_working_dir: ${{ env.tg_working_dir }}
+          git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+
