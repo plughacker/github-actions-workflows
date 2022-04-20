@@ -4,9 +4,6 @@ on:
       working_dir:
         required: true
         type: string
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
 env:
   tf_version: 'v1.0.6'
