@@ -35,7 +35,7 @@ env:
 
 jobs:
   terragrunt:
-    name: 'Terragrunt'
+    name: Terragrunt
     runs-on: ubuntu-latest
     steps:
       - name: Checkout private tools
@@ -43,7 +43,7 @@ jobs:
         with:
           repository: ${{ env.git_repository }}
           token: ${{ secrets.gh_token }}
-          ref: test/removing-profiles
+          ref: main
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
