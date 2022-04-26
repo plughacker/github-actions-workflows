@@ -16,17 +16,15 @@ on:
     inputs:
       node_env:
         required: false
+        default: DEV
         type: string
-
-env:
-  node_env: ${{ inputs.node_env }}
 
 jobs:
   Migrations:
     name: NodeJS Migrations 
     runs-on: self-hosted
     env:
-      NODE_ENV: ${{ env.node_env }} 
+      NODE_ENV: ${{ inputs.node_env }} 
 
     steps:
       - name: Checkout
