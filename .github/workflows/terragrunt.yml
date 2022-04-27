@@ -66,4 +66,4 @@ jobs:
           tg_working_dir: ${{ env.tg_working_dir }}
           git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
-          TF_VAR_container_revision: ${{ github.sha }}-${{ github.run_id }}
+          TF_VAR_container_revision: ${{ github.sha }}
