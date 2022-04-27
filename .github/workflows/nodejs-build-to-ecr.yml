@@ -7,6 +7,12 @@ on:
       aws_secret_access_key:
         required: true
 
+      rds_cert_1:
+        required: false
+
+      rds_cert_2:
+        required: false
+
     inputs:
       ecr_repository:
         required: true
@@ -37,8 +43,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ inputs.ecr_repository }} 
           IMAGE_TAG: ${{ github.sha }}
-          RDS_CERT_1: ${{ secrets.RDS_CERT_1 }}
-          RDS_CERT_2: ${{ secrets.RDS_CERT_2 }}
+          RDS_CERT_1: ${{ secrets.rds_cert_1 }}
+          RDS_CERT_2: ${{ secrets.rds_cert_2 }}
         run: |
           echo "${RDS_CERT_1}${RDS_CERT_2}" | base64 -d > rds-combined-ca-bundle.pem
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
