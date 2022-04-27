@@ -57,7 +57,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
           aws-region: us-east-1
 
-      - name: Terragrunt init
+      - name: Terragrunt apply
         uses: nulldutra/terragrunt-github-action@main
         with:
           tf_version: ${{ env.tf_version }} 
