@@ -60,4 +60,5 @@ jobs:
           tg_command: 'init'
           tg_working_dir: ${{ env.tg_working_dir }}
           git_ssh_key: ${{ secrets.git_ssh_key }}
-
+        env:
+          TF_VAR_container_revision: $(date +%d-%m-%Y-%s)
