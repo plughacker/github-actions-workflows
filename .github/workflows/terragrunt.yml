@@ -22,6 +22,10 @@ on:
         required: true
         type: string
 
+      tg_command:
+        required: true
+        type: string
+
       tg_working_dir:
         required: true
         type: string
@@ -29,6 +33,7 @@ on:
 env:
   tf_version: '1.0.6'
   tg_version: '0.36.7'
+  tg_command: ${{ inputs.tg_command }}
   tg_working_dir: ${{ inputs.tg_working_dir }}
   git_repository: ${{ inputs.git_repository }}
   git_repository_owner: ${{ inputs.git_repository_owner }}
@@ -52,12 +57,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
           aws-region: us-east-1
 
-      - name: Terragrunt init
+      - name: Terragrunt apply
         uses: nulldutra/terragrunt-github-action@main
         with:
-          tf_version: 1.0.6
-          tg_version: 0.36.7
-          tg_command: 'init'
+          tf_version: ${{ env.tf_version }} 
+          tg_version: ${{ env.tg_version }}
+          tg_command: ${{ env.tg_command }}
           tg_working_dir: ${{ env.tg_working_dir }}
           git_ssh_key: ${{ secrets.git_ssh_key }}
-
+        env:
+          TF_VAR_container_revision: ${{ github.sha }}

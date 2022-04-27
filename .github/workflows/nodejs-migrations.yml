@@ -1,0 +1,49 @@
+on:
+  workflow_call:
+    secrets:
+      typeorm_host:
+        required: true
+
+      typeorm_username:
+        required: true
+      
+      typeorm_password:
+        required: true
+
+      typeorm_database:
+        required: true
+
+    inputs:
+      node_env:
+        required: false
+        default: DEV
+        type: string
+
+jobs:
+  Migrations:
+    name: NodeJS Migrations 
+    runs-on: self-hosted
+    env:
+      NODE_ENV: ${{ inputs.node_env }} 
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Run
+        env:
+          TYPEORM_HOST: ${{ secrets.typeorm_host }}
+          TYPEORM_USERNAME: ${{ secrets.typeorm_username }}
+          TYPEORM_PASSWORD: ${{ secrets.typeorm_password }}
+          TYPEORM_DATABASE: ${{ secrets.typeorm_database }}
+        run: |
+          npm install -g yarn
+          yarn install
+          yarn build
+          yarn migration:run
+
