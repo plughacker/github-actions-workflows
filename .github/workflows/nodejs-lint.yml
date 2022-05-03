@@ -14,12 +14,3 @@ jobs:
       - run: |
           yarn
           yarn lint
-
-    SlackNotification:
-      name: Send slack notification
-
-      if: always()
-      uses: ./.github/workflows/slack-notify.yml
-      env:
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_MESSAGE: 'NodeJS lint'
