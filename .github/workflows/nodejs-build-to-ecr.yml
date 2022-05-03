@@ -24,7 +24,7 @@ on:
         default: './Dockerfile'
 
 jobs:
-  Migrations:
+  Build:
     name: Build application 
     runs-on: self-hosted
 
