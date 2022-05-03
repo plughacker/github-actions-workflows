@@ -59,3 +59,12 @@ jobs:
       - name: Logout of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+  SlackNotification:
+    name: Send slack notification
+
+    if: always()
+    uses: ./.github/workflows/slack-notify.yml
+    env:
+      SLACK_COLOR: ${{ job.status }}
+      SLACK_MESSAGE: 'Build and push to ECR'
