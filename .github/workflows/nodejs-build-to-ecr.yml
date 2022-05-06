@@ -13,6 +13,9 @@ on:
       rds_cert_2:
         required: false
 
+      slack_webhook:
+        required: true
+
     inputs:
       ecr_repository:
         required: true
@@ -22,6 +25,11 @@ on:
         required: false
         type: string
         default: './Dockerfile'
+
+      slack_config:
+        required: false
+        type: string
+        default: '.github/config/slack.yml'
 
 jobs:
   Build:
@@ -60,10 +68,13 @@ jobs:
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
-      - name: Slack Notification
-        if: always()
-        uses: rtCamp/action-slack-notify@v2
+      - name: Notify Slack on failure
+        if: ${{ failure() }}
+        uses: act10ns/slack@v1
         env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: 'Build and push to ECR'
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+        with:
+          config: ${{ inputs.slack_config }}
+          status: ${{ job.status }}
+
+
