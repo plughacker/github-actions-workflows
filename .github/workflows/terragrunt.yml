@@ -58,6 +58,10 @@ jobs:
           token: ${{ secrets.gh_token }}
           ref: main
 
+      - name: Get Config Slack Notification
+        run: |
+          curl -s -o ./slack.yml https://raw.githubusercontent.com/plughacker/github-actions-workflows/add/alert-slack/.github/workflows/slack.yml
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
