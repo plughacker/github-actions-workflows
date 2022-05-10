@@ -13,6 +13,9 @@ on:
       aws_secret_access_key:
         required: true
 
+      slack_webhook:
+        required: true
+
     inputs:
       git_repository:
         required: true
@@ -29,6 +32,11 @@ on:
       tg_working_dir:
         required: true
         type: string
+
+      slack_config:
+        required: false
+        type: string
+        default: ./slack.yml
 
 env:
   tf_version: '1.0.6'
@@ -67,3 +75,12 @@ jobs:
           git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
           TF_VAR_container_revision: ${{ github.sha }}
+
+      - name: Notify Slack on failure
+        if: ${{ failure() }}
+        uses: act10ns/slack@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+        with:
+          config: ${{ inputs.slack_config }}
+          status: ${{ job.status }}

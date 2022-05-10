@@ -13,6 +13,9 @@ on:
       rds_cert_2:
         required: false
 
+      slack_webhook:
+        required: true
+
     inputs:
       ecr_repository:
         required: true
@@ -23,14 +26,23 @@ on:
         type: string
         default: './Dockerfile'
 
+      slack_config:
+        required: false
+        type: string
+        default: ./slack.yml 
+
 jobs:
-  Migrations:
+  Build:
     name: Build application 
     runs-on: self-hosted
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Get Config Slack Notification
+        run: |
+          curl -s -o ./slack.yml https://raw.githubusercontent.com/plughacker/github-actions-workflows/add/alert-slack/.github/workflows/slack.yml
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -59,3 +71,14 @@ jobs:
       - name: Logout of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+      - name: Notify Slack on failure
+        if: ${{ failure() }}
+        uses: act10ns/slack@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+        with:
+          config: ${{ inputs.slack_config }}
+          status: ${{ job.status }}
+
+
