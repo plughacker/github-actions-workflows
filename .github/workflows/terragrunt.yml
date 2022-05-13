@@ -70,7 +70,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Terragrunt apply
-        uses: nulldutra/terragrunt-github-action@main
+        uses: gabrieldmdutra/terragrunt-github-actions@v1
         with:
           tf_version: ${{ env.tf_version }} 
           tg_version: ${{ env.tg_version }}
