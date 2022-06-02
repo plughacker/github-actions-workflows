@@ -56,7 +56,7 @@ jobs:
         with:
           repository: ${{ env.git_repository }}
           token: ${{ secrets.gh_token }}
-          ref: main
+          ref: webhooks-fork
 
       - name: Get Config Slack Notification
         run: |
