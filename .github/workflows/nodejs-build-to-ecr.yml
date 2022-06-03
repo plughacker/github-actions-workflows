@@ -31,6 +31,11 @@ on:
         type: string
         default: ./slack.yml 
 
+      image_tag:
+        required: false
+        type: string
+        default: ${{ github.sha }}
+
 jobs:
   Build:
     name: Build application 
@@ -59,7 +64,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ inputs.ecr_repository }} 
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
           RDS_CERT_1: ${{ secrets.rds_cert_1 }}
           RDS_CERT_2: ${{ secrets.rds_cert_2 }}
         run: |
