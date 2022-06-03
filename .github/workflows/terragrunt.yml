@@ -17,6 +17,11 @@ on:
         required: true
 
     inputs:
+      container_revision:
+        required: false
+        type: string
+        default: ${{ github.sha }}
+
       git_repository:
         required: true
         type: string
@@ -78,7 +83,7 @@ jobs:
           tg_working_dir: ${{ env.tg_working_dir }}
           git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
-          TF_VAR_container_revision: ${{ github.sha }}
+          TF_VAR_container_revision: ${{ inputs.container_revision }}
 
       - name: Notify Slack on failure
         if: ${{ failure() }}
