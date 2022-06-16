@@ -1,0 +1,59 @@
+on:
+  workflow_call:
+    secrets:
+      gh_token:
+        required: true
+
+      git_ssh_key:
+        required: true
+      
+      aws_access_key_id:
+        required: true
+
+      aws_secret_access_key:
+        required: true
+
+    inputs:
+      git_repository:
+        required: true
+        type: string
+
+      tf_command:
+        required: true
+        type: string
+
+      tf_working_dir:
+        required: true
+        type: string
+
+env:
+  tf_version: '1.0.6'
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout private tools
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ inputs.git_repository }}
+          token: ${{ secrets.gh_token }}
+          ref: add/terraform-ecs-applications
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-region: us-east-1
+
+      - name: Terraform apply
+        uses: plughacker/terraform-github-actions@main
+        with:
+          tf_version: ${{ env.tf_version }}
+          tf_command: ${{ inputs.tf_command }}
+          tf_working_dir: ${{ inputs.tf_working_dir }}
+          git_ssh_key: ${{ secrets.git_ssh_key }}
+        env:
+          TF_VAR_container_revision: ${{ github.sha }}
