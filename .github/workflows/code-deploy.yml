@@ -1,0 +1,56 @@
+on:
+  workflow_call:
+    secrets:      
+      aws_access_key_id:
+        required: true
+
+      aws_secret_access_key:
+        required: true
+
+    inputs:
+      container_name:
+        required: true
+        type: string
+
+      container_port:
+        required: true
+        type: string
+
+      application_name:
+        required: true
+        type: string
+
+      deployment_group_name:
+        required: true
+        type: string
+
+      bucket_name:
+        required: true
+        type: string
+
+      region:
+        required: false
+        default: 'us-east-1'
+        type: string
+
+jobs:
+  code_deploy:
+    name: Code Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-region: ${{ inputs.region }}
+
+      - name: Code deploy
+        uses: plughacker/codedeploy-github-actions@main
+        with:
+          container_name: ${{ inputs.container_name }}
+          container_port: ${{ inputs.container_port }}
+          application_name: ${{ inputs.application_name }}
+          deployment_group_name: ${{ inputs.deployment_group_name }}
+          bucket_name: ${{ inputs.bucket_name }}
+          region: ${{ inputs.region }}
