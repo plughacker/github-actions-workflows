@@ -39,7 +39,7 @@ jobs:
         with:
           repository: ${{ inputs.git_repository }}
           token: ${{ secrets.gh_token }}
-          ref: add/terraform-ecs-applications
+          ref: main
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
