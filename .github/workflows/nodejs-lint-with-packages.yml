@@ -1,0 +1,23 @@
+on:
+  workflow_call:
+    secrets:
+      gh_token:
+        required: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+          scope: '@plughacker'
+          registry-url: https://npm.pkg.github.com/
+      - run: |
+          yarn
+          yarn lint
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.gh_token }}
