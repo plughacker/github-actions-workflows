@@ -15,6 +15,9 @@ on:
 
       slack_webhook:
         required: true
+      
+      gh_token:
+        required: false
 
     inputs:
       ecr_repository:
@@ -63,6 +66,8 @@ jobs:
           RDS_CERT_1: ${{ secrets.rds_cert_1 }}
           RDS_CERT_2: ${{ secrets.rds_cert_2 }}
         run: |
+          echo "@plughacker:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.gh_token }}" >> .npmrc
           echo "${RDS_CERT_1}${RDS_CERT_2}" | base64 -d > rds-combined-ca-bundle.pem
           docker build -f ${{ inputs.dockerfile_path }} -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
