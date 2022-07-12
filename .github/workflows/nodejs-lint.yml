@@ -2,7 +2,7 @@ on:
   workflow_call:
     secrets:
       gh_token:
-        required: false
+        required: true
 
 jobs:
   lint:

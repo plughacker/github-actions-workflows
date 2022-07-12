@@ -17,7 +17,7 @@ on:
         required: true
       
       gh_token:
-        required: false
+        required: true
 
     inputs:
       ecr_repository:
