@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      gh_token:
+        required: true
 
 jobs:
   tests:
@@ -10,6 +13,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
+          scope: '@plughacker'
+          registry-url: https://npm.pkg.github.com/
           node-version: 14.x
       - run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.gh_token }}
       - run: yarn test --passWithNoTests
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.gh_token }}
