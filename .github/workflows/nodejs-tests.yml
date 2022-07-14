@@ -2,7 +2,7 @@ on:
   workflow_call:
     secrets:
       gh_token:
-        required: true
+        required: false
 
 jobs:
   tests:
