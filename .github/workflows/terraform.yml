@@ -57,3 +57,16 @@ jobs:
           git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
           TF_VAR_container_revision: ${{ github.sha }}
+
+      - name: Terraform apply - hotfix
+        if: startsWith(github.event.head_commit.message, 'hotfix')
+
+        uses: plughacker/terraform-github-actions@main
+        with:
+          tf_version: ${{ env.tf_version }}
+          tf_command: ${{ inputs.tf_command }}
+          tf_working_dir: ${{ inputs.tf_working_dir }}
+          git_ssh_key: ${{ secrets.git_ssh_key }}
+        env:
+          TF_VAR_container_revision: ${{ github.sha }}
+          TF_VAR_deployment_config_name: CodeDeployDefault.ECSAllAtOnce
