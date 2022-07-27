@@ -61,5 +61,5 @@ jobs:
           tf_working_dir: ${{ inputs.tf_working_dir }}
           git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
-          TF_VAR_container_revision: ${{ inputs.deployment_config_name }}
-          TF_VAR_deployment_config_name: CodeDeployDefault.ECSAllAtOnce
+          TF_VAR_container_revision: ${{ github.sha }}
+          TF_VAR_deployment_config_name: $${{ inputs.deployment_config_name }}
