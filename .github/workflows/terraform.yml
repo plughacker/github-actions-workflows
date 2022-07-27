@@ -17,7 +17,7 @@ on:
       deployment_config_name:
         required: false
         type: string
-        default: CodeDeployDefault.ECSAllAtOnce
+        default: CodeDeployDefault.ECSLinear10PercentEvery3Minutes
 
       git_repository:
         required: true
