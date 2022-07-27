@@ -62,4 +62,4 @@ jobs:
           git_ssh_key: ${{ secrets.git_ssh_key }}
         env:
           TF_VAR_container_revision: ${{ github.sha }}
-          TF_VAR_deployment_config_name: $${{ inputs.deployment_config_name }}
+          TF_VAR_deployment_config_name: ${{ inputs.deployment_config_name }}
